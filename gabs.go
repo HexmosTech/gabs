@@ -29,6 +29,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -141,6 +142,10 @@ func (g *Container) searchStrict(allowWildcard bool, hierarchy ...string) (*Cont
 	object := g.Data()
 	for target := 0; target < len(hierarchy); target++ {
 		pathSeg := hierarchy[target]
+		if reflect.TypeOf(object).String() == "*gabs.Container" {
+			object = object.(*Container).object
+		}
+
 		if mmap, ok := object.(map[string]interface{}); ok {
 			object, ok = mmap[pathSeg]
 			if !ok {
