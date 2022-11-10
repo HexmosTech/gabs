@@ -467,6 +467,14 @@ func (g *Container) Delete(hierarchy ...string) error {
 		delete(obj, target)
 		return nil
 	}
+	if obj, ok := object.(*Container); ok {
+		if ok = obj.ExistsP(target); !ok {
+			return ErrNotFound
+		}
+		obj.Delete(target)
+		//delete(obj, target)
+		return nil
+	}
 	if array, ok := object.([]interface{}); ok {
 		if len(hierarchy) < 2 {
 			return errors.New("unable to delete array index at root of path")
