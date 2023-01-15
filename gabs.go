@@ -308,6 +308,9 @@ func (g *Container) Set(value interface{}, hierarchy ...string) (*Container, err
 
 	for target := 0; target < len(hierarchy); target++ {
 		pathSeg := hierarchy[target]
+		if reflect.TypeOf(object).String() == "*gabs.Container" {
+			object = object.(*Container).object
+		}
 		if mmap, ok := object.(map[string]interface{}); ok {
 			if target == len(hierarchy)-1 {
 				object = value
