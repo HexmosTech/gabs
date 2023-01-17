@@ -272,6 +272,18 @@ func (g *Container) Children() []*Container {
 // ChildrenMap returns a map of all the children of an object element. IF the
 // underlying value isn't a object then an empty map is returned.
 func (g *Container) ChildrenMap() map[string]*Container {
+	if g == nil {
+		return nil
+	}
+
+	for {
+		if reflect.TypeOf(g.Data()).String() == "*gabs.Container" {
+			g = g.Data().(*Container)
+		} else {
+			break
+		}
+	}
+
 	if mmap, ok := g.Data().(map[string]interface{}); ok {
 		children := make(map[string]*Container, len(mmap))
 		for name, obj := range mmap {
